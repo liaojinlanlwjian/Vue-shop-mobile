@@ -1,9 +1,12 @@
 import request from '../config/request.js'
 
-export function getAddress(user){
-	return request({ url: '/addressList/?username=' + user,method: 'get'})
+export function patchPo(id,params){
+	return request({ url: '/buyList/' +id,method: 'patch',data:params})
 }
 export function getpay(user,status){
+	return request({ url: '/buyList/?username=' + user +'&status=' + status,method: 'get'})
+}
+export function getdonepay(user,status){
 	return request({ url: '/buyList/?username=' + user +'&status=' + status,method: 'get'})
 }
 export function addBuy(params){
@@ -18,6 +21,15 @@ export function changeAddress(id,params){
 export function delpay(id){
 	return request({ url: '/buyList/' + id,method: 'delete'})
 }
-export function getAddress_one(idid){
-	return request({ url: '/addressList/?id=' + idid,method: 'get'})
+export function addPinjia(params){
+	return request({ url: '/pinjiaList',method: 'post',data:params});
+} 
+export function getpinjia(user,status){
+	return request({ url: '/pinjiaList/?user=' + user +'&status=' + status,method: 'get'})
+}
+export function patchpinjia(id,params){
+	return request({ url: '/pinjiaList/' +id,method: 'patch',data:params})
+}
+export function delpinjia(id){
+	return request({ url: '/pinjiaList/' + id,method: 'delete'})
 }

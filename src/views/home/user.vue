@@ -33,10 +33,21 @@
 		<div
 			style="width: 94%; height: 70px; background-color: #FFFFFF; margin: -58px auto 0px auto; border-radius: 18px;">
 			<van-row style="margin: 0px auto;">
-				<van-col v-for="(item,index) in jifen" :key="index"
-					style="width: 25%; height: 70px; text-align: center; font-size: 13px; line-height: 35px;" span="6">
-					<div>{{item.num}}</div>
-					<div>{{item.text}}</div>
+				<van-col @click="gopoints" style="width: 25%; height: 70px; text-align: center;font-size: 13px; line-height: 35px;" span="6">
+					<div>0.00</div>
+					<div>积分</div>
+				</van-col>
+				<van-col @click="goyouhui" style="width: 25%; height: 70px; text-align: center;font-size: 13px; line-height: 35px;" span="6">
+					<div>0.00</div>
+					<div>优惠券</div>
+				</van-col>
+				<van-col @click="goticket" style="width: 25%; height: 70px; text-align: center;font-size: 13px; line-height: 35px;" span="6">
+					<div>未开通</div>
+					<div>小金库</div>
+				</van-col>
+				<van-col @click="gobalance" style="width: 25%; height: 70px; text-align: center;font-size: 13px; line-height: 35px;" span="6">
+					<div>0.00</div>
+					<div >我的余额</div>
 				</van-col>
 			</van-row>
 		</div>
@@ -49,8 +60,8 @@
 				<van-grid :column-num="5" :border="false">
 					<van-grid-item icon="send-gift-o" text="待付款" @click="gounpaid" />
 					<van-grid-item icon="shop-o" text="待收货" @click="goreceived" />
-					<van-grid-item icon="description" text="待评价" />
-					<van-grid-item icon="logistics" text="退换/退款" />
+					<van-grid-item icon="description" text="待评价"  @click="gopinjia"  />
+					<van-grid-item icon="logistics" text="全部订单" @click="goallpo"  />
 					<van-grid-item icon="location-o" @click="goAddress" text="我的地址" />
 				</van-grid>
 			</div>
@@ -92,23 +103,6 @@
 				show: false,
 				name: '',
 				src: '',
-				jifen: [{
-						text: '积分',
-						num: '0'
-					},
-					{
-						text: '优惠券',
-						num: '0'
-					},
-					{
-						text: '代金券',
-						num: '0.00'
-					},
-					{
-						text: '金币',
-						num: '0.00'
-					},
-				],
 				shch: [{
 						text: '会员频道',
 						icon: 'gem-o',
@@ -168,11 +162,29 @@
 			this.getdata();
 		},
 		methods: {
+			gobalance(){
+				this.$router.push('/balance');
+			},
+			goticket(){
+				this.$router.push('/ticket');
+			},
+			goyouhui(){
+				this.$router.push('/youhui');
+			},
+			gopoints(){
+				this.$router.push('/point');
+			},
 			showNotify(){
 				this.$notify({ type: 'danger', message: '该功能还未实现' });
 			},
 			gounpaid(){
 				this.$router.push('/unpaid');
+			},
+			goallpo(){
+				this.$router.push('/allpo');
+			},
+			gopinjia(){
+				this.$router.push('/daipinjia');
 			},
 			goreceived(){
 				this.$router.push('/received');

@@ -109,11 +109,26 @@
 			onClickLeft() {
 				this.$router.go(-1);
 			},
+			getTime(){
+				var date = new Date();
+				    var month = date.getMonth() + 1;
+				    var strDate = date.getDate();
+				    if (month >= 1 && month <= 9) {
+				        month = "0" + month;
+				    }
+				    if (strDate >= 0 && strDate <= 9) {
+				        strDate = "0" + strDate;
+				    }
+				    this.currentDate = date.getFullYear() + "-" + month + "-" + strDate
+				            + " " + date.getHours() + ":" + date.getMinutes();
+			},
 			confirm() {
+				this.getTime();
 				let that = this;
 				if(this.token==undefined){
 					let params = {	
 					id:Math.round(Math.random() * 10000),
+					time:this.currentDate,
 					address_id:that.address.id,
 					status:that.www,
 					goods_status:that.status,

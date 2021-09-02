@@ -21,7 +21,7 @@
 	export default {
 	  methods: {
 	    onClickLeft() {
-			this.$router.push('/nopaid');
+			this.$router.push('/unpaid');
 	    },
 	  },
 	};

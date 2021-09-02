@@ -17,6 +17,13 @@ import Pay from '../views/Buy/pay.vue'
 import Nopay from '../views/Buy/nopay.vue'
 import Received from '../views/status/received.vue'
 import Unpaid from '../views/status/unpaid.vue'
+import Pinjia from '../views/status/pinjia.vue'
+import Daipinjia from '../views/status/daipjia.vue'
+import Allpo from '../views/status/allpo.vue'
+import Balance from '../views/active/balance.vue'
+import Point from '../views/active/point.vue'
+import Ticket from '../views/active/ticket.vue'
+import Youhui from '../views/active/youhui.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -51,6 +58,26 @@ export default new Router({
 			path: '/login',
 			name: 'login',
 			component: Login,
+		},
+		{
+			path: '/balance',
+			name: 'balance',
+			component: Balance,
+		},
+		{
+			path: '/ticket',
+			name: 'ticket',
+			component: Ticket,
+		},
+		{
+			path: '/youhui',
+			name: 'youhui',
+			component: Youhui,
+		},
+		{
+			path: '/point',
+			name: 'point',
+			component: Point,
 		},
 		{
 			path: '/jiesuan',
@@ -89,6 +116,21 @@ export default new Router({
 			path: '/unpaid',
 			name: 'unpaid',
 			component: Unpaid,
+		},
+		{
+			path: '/pinjia',
+			name: 'pinjia',
+			component: Pinjia,
+		},
+		{
+			path: '/allpo',
+			name: 'allpo',
+			component: Allpo,
+		},
+		{
+			path: '/daipinjia',
+			name: 'daipinjia',
+			component: Daipinjia,
 		},
 		{
 			path: '/address_add',

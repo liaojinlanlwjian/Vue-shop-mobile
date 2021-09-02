@@ -56,11 +56,9 @@
 		},
 		methods: {
 			focu(o){
-				console.log(o);
 			},
 			getgoods() {
 				getGoods().then(response => {
-					console.log(response);
 					this.goodsList = response;
 				}, response => {
 					console.log("error");
