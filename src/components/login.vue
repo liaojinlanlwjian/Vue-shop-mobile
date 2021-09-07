@@ -69,7 +69,7 @@
 							that.$cookies.set('name',response.data[0].name,1000000);
 							that.$cookies.set('src',response.data[0].src,1000000);
 							//有数据代理登录成功
-							that.$toast.success('登陆成功哦哦哦');
+							that.$toast.success('登陆成功');
 							//延迟1000毫秒
 							setTimeout(function() {
 								that.$router.push({

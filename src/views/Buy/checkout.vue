@@ -147,6 +147,7 @@
 				};
 				addBuy(params).then(res=>{
 					that.$toast.success('成功');
+					that.$cookies.set('gomaizhe',that.address.name);
 					delCar(that.goodsMsg.id);
 					setTimeout(function(){
 						that.$router.push('/pay');
