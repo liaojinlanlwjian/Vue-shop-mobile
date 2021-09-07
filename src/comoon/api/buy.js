@@ -27,6 +27,9 @@ export function addPinjia(params){
 export function getpinjia(user,status){
 	return request({ url: '/pinjiaList/?user=' + user +'&status=' + status,method: 'get'})
 }
+export function getallpinjia(sale,status){
+	return request({ url: '/pinjiaList/?sale=' + sale +'&status=' + status,method: 'get'})
+}
 export function patchpinjia(id,params){
 	return request({ url: '/pinjiaList/' +id,method: 'patch',data:params})
 }

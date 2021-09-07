@@ -78,11 +78,13 @@
 				step: '',
 				user: '',
 				message: '',
-				status:'已评价'
+				status:'已评价',
+				gomaizhe:''
 			};
 		},
 		mounted() {
 			this.name = this.$cookies.get('name');
+			this.gomaizhe = this.$cookies.get('gomaizhe');
 			this.id = this.$route.query.id;
 			this.user = this.$route.query.name;
 			this.image_src = this.$route.query.src;
@@ -98,7 +100,8 @@
 					value2:that.value2,
 					value3:that.value3,
 					message:that.message,
-					status:that.status
+					status:that.status,
+					gomaizhe:that.gomaizhe,
 				};
 				that.$toast('评价成功');
 				patchpinjia(that.id,params);

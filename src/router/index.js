@@ -36,6 +36,9 @@ export default new Router({
 					path: '/index',
 					name: 'index',
 					component: Index,
+					meta: {
+					        keepAlive: true // 需要缓存
+					      }
 				},
 				{
 					path: '/user',
@@ -146,6 +149,18 @@ export default new Router({
 			path: '/detail',
 			name: 'detail',
 			component: Detail,
-		}
-	]
+		},
+		    {
+		      path: '**',   // 错误路由
+		      redirect: '/index'   //重定向
+		    },
+	],
+	 mode: 'history',
+	  scrollBehavior (to, from, savedPosition) {
+	    if (savedPosition) {
+	      return savedPosition
+	    } else {
+	      return { x: 0, y: 0 }
+	    }
+	  }
 })
