@@ -24,6 +24,10 @@ import Balance from '../views/active/balance.vue'
 import Point from '../views/active/point.vue'
 import Ticket from '../views/active/ticket.vue'
 import Youhui from '../views/active/youhui.vue'
+import Search from '../views/search/search.vue'
+import SearchPage from '../views/search/searchpage.vue'
+import Member from '../views/member/member.vue'
+import Checkout_member from '../views/member/checkout_member.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +40,9 @@ export default new Router({
 					path: '/index',
 					name: 'index',
 					component: Index,
+					meta: {
+					        keepAlive: true // 需要缓存
+					      }
 				},
 				{
 					path: '/user',
@@ -73,6 +80,26 @@ export default new Router({
 			path: '/youhui',
 			name: 'youhui',
 			component: Youhui,
+		},
+		{
+			path: '/search',
+			name: 'search',
+			component: Search,
+		},
+		{
+			path: '/searchpage',
+			name: 'searchpage',
+			component: SearchPage,
+		},
+		{
+			path: '/member',
+			name: 'member',
+			component: Member,
+		},
+		{
+			path: '/checkout_member',
+			name: 'checkout_member',
+			component: Checkout_member,
 		},
 		{
 			path: '/point',
@@ -146,6 +173,18 @@ export default new Router({
 			path: '/detail',
 			name: 'detail',
 			component: Detail,
-		}
-	]
+		},
+		    {
+		      path: '**',   // 错误路由
+		      redirect: '/index'   //重定向
+		    },
+	],
+	 mode: 'history',
+	  scrollBehavior (to, from, savedPosition) {
+	    if (savedPosition) {
+	      return savedPosition
+	    } else {
+	      return { x: 0, y: 0 }
+	    }
+	  }
 })

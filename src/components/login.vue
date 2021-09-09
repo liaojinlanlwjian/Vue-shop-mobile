@@ -63,13 +63,14 @@
 					that.$toast.fail('请先勾选用户手册');
 				}
 				else{
-					axios.get('http://localhost:3000/user/?name='+ that.username).then(response => {
+					axios.get('http://localhost:3000/userList/?name='+ that.username).then(response => {
 						if (that.psd == response.data[0].psd) {
 							//return;x	
 							that.$cookies.set('name',response.data[0].name,1000000);
 							that.$cookies.set('src',response.data[0].src,1000000);
+							that.$cookies.set('id',response.data[0].id,1000000);
 							//有数据代理登录成功
-							that.$toast.success('登陆成功哦哦哦');
+							that.$toast.success('登陆成功');
 							//延迟1000毫秒
 							setTimeout(function() {
 								that.$router.push({

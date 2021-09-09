@@ -54,6 +54,8 @@
 				psd1: '',
 				email:'',
 				tel:'',
+				member:'未开通',
+				src:'https://tse1-mm.cn.bing.net/th/id/R-C.232904c2ee9450d3afabd2c553477793?rik=Wrs6xV46pcnU%2fg&riu=http%3a%2f%2fwww.sucaijishi.com%2fuploadfile%2f2016%2f0203%2f20160203022635285.png&ehk=qK8HIsKsLMdhbBUdvvlQJnmEw7K%2fpbcfFp5ZrHO2F9w%3d&risl=&pid=ImgRaw&r=0'
 			};
 		},
 		methods: {
@@ -88,6 +90,8 @@
 						email:this.email,
 						tel:this.tel,
 						time:this.currentDate,
+						src:this.src,
+						member:this.member
 					};
 					getEnroll(params).then(response => {
 						this.$toast.success('注册成功');

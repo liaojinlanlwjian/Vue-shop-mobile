@@ -10,7 +10,7 @@
 					/>
 			</div>
 			<div style="width: 70%;">
-				<van-search shape="round" background="#f7f8fa"  clearable v-model="value"  placeholder="请输入搜索关键词"
+				<van-search shape="round" background="#f7f8fa" @click="goSearch"  clearable v-model="value"  placeholder="请输入搜索关键词"
 					@search="onSearch">
 				</van-search>
 			</div>
@@ -42,6 +42,9 @@
 			}
 		},
 		methods: {
+			goSearch(){
+				this.$router.push('/search');
+			},
 			onSearch() {
 				console.log("search");
 			}

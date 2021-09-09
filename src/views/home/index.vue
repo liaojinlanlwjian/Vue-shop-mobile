@@ -95,7 +95,7 @@
 		methods: {
 			buyGoods(o){
 				localStorage.setItem('item',JSON.stringify(o));
-				this.$router.push({path: "/detail", query: {id: o.id , name:o.name , src:o.image_src , sale:o.sale}})
+				this.$router.push({path: "/detail", query: {id: o.id , name:o.name , src:o.image_src , srcc:o.src ,sale:o.sale,detail_src:o.detail_src}})
 			},
 			geticon() {
 				getIcon().then(response => {

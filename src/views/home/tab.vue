@@ -1,7 +1,10 @@
 <template>
 	<div>
 		<template>
-			<router-view />
+			<keep-alive>
+			    <router-view v-if="$route.meta.keepAlive"></router-view>
+			</keep-alive>
+			<router-view v-if="!$route.meta.keepAlive"></router-view>
 		</template>
 		<template>
 			<van-tabbar v-model="active" @change="Jump">

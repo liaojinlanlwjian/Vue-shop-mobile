@@ -10,9 +10,9 @@
 		/>
 		
 		<van-address-list v-model="chosenAddressId" :list="list" @add="onAdd" @edit="onEdit" />
-		<div v-show="show"  style="width: 92%; height: 50px; margin: 160px auto 0px;">
+		<div v-show="show"  style="width: 92%; height: 50px; margin: 240px auto 0px auto;">
 			<div>
-				<van-button color="#9864e0" round    block @click="huhu">确 定</van-button>
+				<van-button color="#6a2c70" round    block @click="huhu">确 定</van-button>
 			</div>
 		</div>
 	</div>

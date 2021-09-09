@@ -1,9 +1,7 @@
 <template>
 	<div>
 		<van-nav-bar title="收银台" left-arrow @click-left="onClickLeft" />
-		<van-cell-group>
-			<van-cell title="付款金额" :value="'¥' + '   ' + goodsMsg.step*goodsMsg.sale1 + '.00'" :label="address.name + '   ' + address.detail" />
-		</van-cell-group>
+		
 		<div style="width: 100%; height: 30px; background-color: #efeff1;"> <span
 				style="font-size: 12px; color: #444f5a; padding-left: 10px; line-height: 30px;">请选择支付方式</span> </div>
 				
@@ -22,9 +20,6 @@
 			</div>
 			
 		</template>
-
-		
-		
 		<van-dialog v-model="show2" title="请支付" show-cancel-button @cancel="cancel" @confirm="confirm"
 			:cancelButtonText="hhh" :confirmButtonText="www">
 			<van-image width="100" height="100" :src="src"
@@ -35,32 +30,23 @@
 
 <script>
 	import {
-		addBuy,
-		patchstatus
-	} from '../../comoon/api/buy.js'
-	import {
-		delCar
-	} from '../../comoon/api/car.js'
-	import {
-		addSpend_goods
+		addSpend
 	} from '../../comoon/api/spend.js'
-	import {
-		getUser
-	} from '../../comoon/api/login.js'
 	export default {
 		data() {
 			return {
-				address:[],
-				userSpend:[],
-				olduserSpend:[],
+				oldprice:'',
+				price:'',
+				member_type:'',
+				count:'',
+				name:'',
+				token:1,
 				src:'',
 				id:'',
 				show2: false,
 				www: '已支付',
 				hhh: '未支付',
-				status:'未发货',
-				goodsMsg:[],
-				status_id:'',
+				member:'已开通',
 				zhifu:[
 					{
 						img:'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic.pc6.com%2Fup%2F2015-10%2F14444674655340116.png&refer=http%3A%2F%2Fpic.pc6.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1632647600&t=cc244fce45f4face603223be574735e7',
@@ -92,11 +78,10 @@
 		},
 		mounted() {
 			this.id = this.$cookies.get('id');
-			this.goodsMsg = JSON.parse(localStorage.getItem('item'));//JSON.parse() 方法将数据转换为 JavaScript 对象。
-			this.address  = this.$route.query.address;
-			this.token = this.$route.query.token;
-			this.status_id = this.$route.query.status_id;
-			this.getuser();
+			this.oldprice = this.$route.query.oldprice;
+			this.price = this.$route.query.price;
+			this.member_type = this.$route.query.typee;
+			this.count = '原价为' + this.oldprice + '的' +this.member_type + '套餐';
 		},
 		methods: {
 			fukuan(o){
@@ -133,61 +118,22 @@
 				    this.currentDate = date.getFullYear() + "-" + month + "-" + strDate
 				            + " " + date.getHours() + ":" + date.getMinutes();
 			},
-			getuser(){
-				getUser(this.id).then(res=>{
-					console.log(res[0]);
-					if(res[0].spend==null){
-						this.getTime();
-						this.userSpend=[{
-							time:this.currentDate,
-							type:this.goodsMsg.name,
-							spend:this.goodsMsg.sale1,
-							user:this.address.name
-						}];
-					}
-					else if(res[0].spend!=null){
-					this.userSpend = res[0].spend;
-					this.getTime();
-					this.olduserSpend={
-						time:this.currentDate,
-						type:this.goodsMsg.name,
-						spend:this.goodsMsg.sale1,
-						user:this.address.name
-					};
-					this.userSpend.push(this.olduserSpend)
-					}
-				
-				},res=>{
-					console.log("erorr");
-				})
-			},
 			confirm() {
+				this.name = this.$cookies.get('name');
 				this.getTime();
 				let that = this;
-				if(this.token==undefined){
-					let params = {	
-					id:Math.round(Math.random() * 10000),
+					let params = {
+					member:this.member,
+					spend:[{	
 					time:this.currentDate,
-					address_id:that.address.id,
-					status:that.www,
-					goods_status:that.status,
-					name:that.address.name,
-					username:that.address.username,
-					tel:that.address.tel,
-					address:that.address.address,
-					goods:[{
-						id:that.goodsMsg.id,
-						image_src:that.goodsMsg.image_src,
-						name:that.goodsMsg.name,
-						user:that.goodsMsg.user,
-						sale:that.goodsMsg.sale1,
-						step:that.goodsMsg.step,
-					}]
+					type:this.count,
+					spend:this.price,
+					user:that.name
+				}],
 				};
-				addBuy(params).then(res=>{
+				addSpend(this.id,params).then(res=>{
 					that.$toast.success('成功');
-					that.$cookies.set('gomaizhe',that.address.name);
-					delCar(that.goodsMsg.id);
+					that.$cookies.set('token',this.token,1000000);
 					setTimeout(function(){
 						that.$router.push('/pay');
 					},1200 )
@@ -195,57 +141,15 @@
 					that.$toast.success('失败');
 				})
 				
-				let paramss ={
-					spend:this.userSpend
-				};
-				addSpend_goods(this.id,paramss)
-				}
-				else if(this.token == 1){
-					let params = {
-						status: this.www,
-					};
-					patchstatus(this.status_id, params).then(response => {
-						that.$toast.success('成功');
-						setTimeout(function(){
-							that.$router.push('/unpaid');
-						},1200 )
-					}, response => {
-						that.$toast.success('失败');
-					})
-				}
-				
 			},
 			cancel() {
-				let that = this;
-				let params = {	
-					id:Math.round(Math.random() * 10000),
-					address_id:that.address.id,
-					status:that.hhh,
-					goods_status:that.status,
-					name:that.address.name,
-					username:that.address.username,
-					tel:that.address.tel,
-					address:that.address.address,
-					goods:[{
-						id:that.goodsMsg.id,
-						image_src:that.goodsMsg.image_src,
-						name:that.goodsMsg.name,
-						user:that.goodsMsg.user,
-						sale:that.goodsMsg.sale1,
-						step:that.goodsMsg.step,
-					}]
-				};
-				addBuy(params).then(res=>{
 					this.$toast.success('请尽快支付哦');
-					delCar(that.goodsMsg.id);
 					setTimeout(function(){
 						that.$router.push('/nopay');
 					},1200 )
-				},res=>{
-					that.$toast.fail('失败');
-				})
+				}
 			},
-		}
+		
 	};
 </script>
 

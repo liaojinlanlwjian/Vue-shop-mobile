@@ -19,13 +19,31 @@
 			</div>
 			<div style="width: 100%; height: 110px; display: flex;">
 				<div style="width: 40%; height: 110px; text-align: center;">
-					<van-image round width="5rem" height="5rem" :src="src" />
+					<van-image round width="5rem" height="5rem" :src="src" @click="xiugaiTx" />
 				</div>
+				<van-popup v-model="show_img" style="width: 280px; height: 240px;">
+					<van-form @submit="onSubmit">
+					  <van-field
+					    v-model="new_src"
+					    name="头像"
+					    label="头像"
+					    placeholder="头像"
+					    :rules="[{ required: true, message: '请填写链接' }]"
+					  />
+					  <div style="width: 100%; height: auto; margin: 0px auto;text-align: center;">
+						  <van-image round width="5rem" height="5rem" :src="new_src" />
+					  </div>
+					  <div style="margin: 16px;">
+					    <van-button round block type="info" native-type="submit">提交</van-button>
+					  </div>
+					</van-form>
+					
+				</van-popup>
 				<div style="width: 58%; height: 110px;">
 					<div style="height: 50px; line-height: 50px; color: #FFFFFF;">{{name}}</div>
 					<div style="height: 50px; line-height: 20px; font-size: 12px;">
 						<van-icon color="#ffde7d" name="fire-o" />
-						<van-tag color="#d4a5a5">签到领积分</van-tag>
+						<van-tag color="#d4a5a5" @click="goMember">{{member}}</van-tag>
 					</div>
 				</div>
 			</div>
@@ -97,11 +115,22 @@
 
 <script>
 	import Notify from '../../components/notify.vue'
+	import {
+		changeUser
+	} from '../../comoon/api/login.js'
+	import {
+		getmemberMsg_one
+	} from '../../comoon/api/member.js'
 	export default {
 		data() {
 			return {
+				member:'',
+				new_src:'',
 				show: false,
+				show_img:false,
 				name: '',
+				id:'',
+				idd:'',
 				src: '',
 				shch: [{
 						text: '会员频道',
@@ -152,7 +181,11 @@
 		mounted() {
 			this.name = this.$cookies.get('name');
 			this.src = this.$cookies.get('src');
+			this.id = this.$cookies.get('id');
+			
 			this.getdata();
+			this.token = this.$cookies.get('token');
+			
 			//权限判定是否已登录，没有登录跳转到登录页面；
 			if (this.name == null) {
 				this.$router.push({
@@ -162,6 +195,24 @@
 			this.getdata();
 		},
 		methods: {
+			goMember(){
+				this.$router.push('/member');
+			},
+			xiugaiTx(){
+				this.show_img = true;
+			},
+			onSubmit(values) {
+				  let params = {
+					  src:this.new_src
+				  };
+				  changeUser(this.id,params).then(res=>{
+					  this.$cookies.remove('src');
+					  this.$cookies.set('src',this.new_src);
+					  this.show_img = false;
+					  this.$router.go(0)
+				  },res=>{
+					  console.log("fuck");})
+			    },
 			gobalance(){
 				this.$router.push('/balance');
 			},
@@ -205,8 +256,20 @@
 			out() {
 				this.show = !this.show;
 			},
+			//获取用户的会员信息
 			getdata() {
-
+				this.idd = this.$cookies.get('id'),
+				getmemberMsg_one(this.idd).then(res=>{
+					this.member = res[0].member;
+					if(this.member == '未开通'){
+						this.member = '开通会员'
+					}
+					else if(this.member == '已开通'){
+						this.member = 'v1'
+					}
+				},res=>{
+					console.log("error");
+				})
 			}
 		}
 	};
