@@ -7,7 +7,7 @@
 			<div style="text-align: center;">
 				<van-image width="160" height="120" :src="src" />
 			</div>
-			<div style="text-align: center;"> 
+			<div style="text-align: center;">
 				{{www}}
 			</div>
 			<div style="text-align: center; font-size: 14px; color: aquamarine;">
@@ -20,9 +20,11 @@
 					:desc="(item.radio<2) ? '黑色' : '绿色'" :title="item.name" :thumb="item.image_src">
 					<template #tags>
 						<div style="width: 100%; display: flex;">
-							<div style="width: 70%;">
-								<van-tag plain type="danger">原价:</van-tag>
-								{{item.sale}}
+							<div style="width: 66%;">
+								<van-tag plain type="danger">尺寸:</van-tag>
+								<span style="font-size: 14px;">{{item.cheoose_size}}</span> &nbsp;&nbsp;&nbsp;
+								<van-tag plain type="danger">颜色:</van-tag>
+								<span style="font-size: 14px;">{{item.cheoose_color}}</span>
 							</div>
 							<div>
 								<van-stepper v-model="item.step" theme="round" @plus="pulsNum(item.sale1)"
@@ -65,7 +67,8 @@
 	export default {
 		data() {
 			return {
-				index:'点我去购物吧',
+				car:1,
+				index: '点我去购物吧',
 				www: '你的购物车空空如也',
 				src: 'https://gh.esgcc.com.cn/images/shoppingcart/cart-empty.png',
 				show: false,
@@ -76,28 +79,33 @@
 				id: '',
 				totalPrice: [],
 				total: 0,
-				token:0
+				token: 0
 			}
 		},
 		mounted() {
 			this.getdata();
 		},
 		methods: {
-			shopping(){
+			shopping() {
 				this.$router.replace('/index');
 			},
 			goJiesuan(item) {
-				localStorage.setItem('item',JSON.stringify(item));//使用 JSON.stringify() 方法将 JavaScript 对象转换为字符串。 
-				this.$router.push({path: "/jiesuan", query: {token: this.token,id:item.id}});
+				localStorage.setItem('item', JSON.stringify(item)); //使用 JSON.stringify() 方法将 JavaScript 对象转换为字符串。 
+				this.$router.push({
+					path: "/jiesuan",
+					query: {
+						token: this.token,
+						id: item.id,
+						car:this.car
+					}
+				});
 			},
 			pulsNum(e) {
 				let a = parseFloat(e);
-				console.log(a);
 				this.total = a + this.total;
 			},
 			minNum(e) {
 				let a1 = parseFloat(e);
-				console.log(a1);
 				this.total = this.total - a1;
 			},
 			likecar(key) {

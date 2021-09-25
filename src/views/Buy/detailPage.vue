@@ -2,10 +2,9 @@
 	<div style="background-color: #f7f8fa;">
 		<van-nav-bar title="购买" left-arrow @click-left="onClickLeft" @click-right="onClickRight" />
 		<div style="width: 100%; height: 260px; margin: 0px auto 6px;  ">
-			<van-swipe class="my-swipe" :autoplay="3000" :height="270" indicator-color="white"
-				style="width: 100%;">
-				<van-swipe-item v-for="(image, index) in objitem.src" :key="index"><img style="width: 100%; height: 270px;"
-						:src="image" /></van-swipe-item>
+			<van-swipe class="my-swipe" :autoplay="3000" :height="270" indicator-color="white" style="width: 100%;">
+				<van-swipe-item v-for="(image, index) in objitem.src" :key="index"><img
+						style="width: 100%; height: 270px;" :src="image" /></van-swipe-item>
 			</van-swipe>
 		</div>
 		<div style="width: 100%; height: auto; background-color: #FFFFFF;">
@@ -30,7 +29,7 @@
 
 		<div style="width: 100%; height: auto; margin-top: 4px;">
 
-			<van-cell is-link @click="showPopup">已选：<span>{{(objitem.radio<2) ? '蓝色' : '绿色'}} x {{objitem.step}}</span>
+			<van-cell>属性：<span>{{ shuxin }}</span>
 			</van-cell>
 			<van-popup v-model="show" closeable>
 				<div style="width: 280px; height: 290px;">
@@ -74,7 +73,7 @@
 				</div>
 			</div>
 		</div>
-		<div style="width: 100%; height: 70px; margin-top: 3px; display: flex; background-color: #FFFFFF;">
+		<div style="width: 100%; height: 70px; margin-top: 3px; display: flex; background-color: #FFFFFF;" >
 			<div style="width: 18%; height: 50px; text-align: center; line-height: 50px;"><span>保障</span></div>
 			<div style="width: 82%; height: 50px; ">
 				<div style="font-size: 12px;">
@@ -84,7 +83,8 @@
 					<van-icon color="#b83b5e" name="success" /><span style="padding-left: 5px;">正品行货 </span>
 				</div>
 				<div style="font-size: 12px;">
-					<van-icon color="#b83b5e" name="success" /><span style="padding-left: 5px;">京东商城向您保证所售商品均为正品行货。</span>
+					<van-icon color="#b83b5e" name="success" /><span
+						style="padding-left: 5px;">京东商城向您保证所售商品均为正品行货。</span>
 				</div>
 			</div>
 		</div>
@@ -97,37 +97,33 @@
 			</van-tab>
 			<van-tab title="商品评价" name="b" :badge="pinjianum" :sticky="sticky">
 				<template v-for="item in pinjia">
-				<div style="width: 94%;height: auto;margin: 0px auto;margin-top: 20px;border-radius: 10px; background-color: #FFFFFF;">
-					<div style="display: flex;width: 100%;height: 40px;">
+					<div
+						style="width: 94%;height: auto;margin: 0px auto;margin-top: 20px;border-radius: 10px; background-color: #FFFFFF;">
+						<div style="display: flex;width: 100%;height: 40px;">
 							<div style="width: 10%; height: auto; line-height: 50px; text-align: center;  ">
-									<van-image
-									  round
-									  width="1.5rem"
-									  height="1.5rem"
-									  src="https://img2.baidu.com/it/u=2435883410,1025234814&fm=26&fmt=auto&gp=0.jpg"
-									/>
+								<van-image round width="1.5rem" height="1.5rem"
+									src="https://img2.baidu.com/it/u=2435883410,1025234814&fm=26&fmt=auto&gp=0.jpg" />
 							</div>
 							<div style="width: 80%; height: 60px;text-align: left;  margin-left: 5px;">
 								<div><span style="font-size: 12px; ">{{item.gomaizhe}}</span></div>
-								<div><van-rate v-model="item.value" size="12px" /></div>
+								<div>
+									<van-rate v-model="item.value" size="12px" />
+								</div>
 							</div>
+						</div>
+						<div style="margin-left: 6px;">
+							<span style="font-size: 13px;">{{item.message}}</span>
+						</div>
+						<div style="margin-top: 5px;margin-left: 6px;">
+							<van-image width="70" height="70" :src="item.image_src" />
+						</div>
+						<div style="margin-bottom: 9px;height: 42px;margin-left: 6px;">
+							<span style="font-size: 9px; color: #2c313c;">{{item.name}}</span>
+						</div>
 					</div>
-					<div style="margin-left: 6px;">
-						<span style="font-size: 13px;">{{item.message}}</span>
-					</div>
-					<div style="margin-top: 5px;margin-left: 6px;">
-						<van-image
-						  width="70"
-						  height="70"
-						  :src="item.image_src"
-						/>
-					</div>
-					<div style="margin-bottom: 9px;height: 42px;margin-left: 6px;">
-						<span style="font-size: 9px; color: #2c313c;">{{item.name}}</span>
-					</div>
-				</div>
 				</template>
-				<div v-show="show1" style="width: 100%; height: 120px; text-align: center; display: flex; background-color: #FFFFFF;">
+				<div v-show="show1"
+					style="width: 100%; height: 120px; text-align: center; display: flex; background-color: #FFFFFF;">
 					该商品还没有评价哦
 				</div>
 			</van-tab>
@@ -140,9 +136,48 @@
 				<van-goods-action-icon icon="cart-o" :badge="carNum" @click="gwche" text="购物车" />
 				<van-goods-action-icon icon="star" text="已收藏" color="#ff5000" />
 				<van-goods-action-button color="#c3bef0" @click="joincar" type="warning" text="加入购物车" />
-				<van-goods-action-button color="#cca8e9" type="danger" @click="gojiesuan" text="立即购买" />
+				<van-goods-action-button color="#cca8e9" type="danger" @click="jiesuan" text="立即购买" />
 			</van-goods-action>
 		</div>
+		<van-action-sheet v-model="show_sku">
+			<div class="content">
+				<div style="width: 35%; margin: 12px auto;">
+					<van-image width="120" height="100" :src="objitem.image_src" />
+				</div>
+				<div style="width: 60%;">
+					<div style="height: 50%;line-height: 80px;"><span style="color: #b83b5e;font-size: 16px;">￥</span><span style="color: #b83b5e;font-size: 28px;">{{ objitem.sale1 }}</span></div>
+					<div style="line-height: 60px;"><span style="color: #928a97;font-size: 16px;">剩余{{ objitem.save }}件</span></div>
+				</div>
+			</div>
+			<div :class="{disno:color_no}" class="color">
+				<div style="height: 48px;line-height: 48px;">颜色</div>
+				<div>
+					<van-radio-group v-model="radio_color" direction="horizontal">
+					<van-radio v-for="(item,index) in objitem.color" :key="index" :name="index">{{ item }}</van-radio>
+				</van-radio-group>
+				</div>
+			</div>
+			<div :class="{disno:size_no}" class="size">
+				<div style="height: 48px;line-height: 48px;">尺寸</div>
+				<div>
+					<van-radio-group v-model="radio_size" direction="horizontal">
+					<van-radio v-for="(item,index) in objitem.size" :key="index" :name="index" :value="item">{{ item }}</van-radio>
+				</van-radio-group>
+				</div>
+			</div>
+			<div class="color">
+				<div style="height: 48px;line-height: 48px;">是否免配送费</div>
+				<div>
+					<van-switch v-model="objitem.delivery" active-color="#a56cc1" size="18px" disabled  inactive-color="#dcdee0" />
+				</div>
+			</div>
+			<div class="btn">
+				<!-- //左上 右上 右下 左下 border-radius的四个边 -->
+				<div style="width: 50%;border-radius: 18px 0px 0px 18px;"><van-button color="#d6c8ff" style="border-radius: 18px 0px 0px 18px;" @click="joincar" block>加入购物车</van-button></div>
+				<div style="width: 50%;border-radius: 0px 18px 18px 0px;"><van-button color="#7e6bc4" style="border-radius: 0px 18px 18px 0px;" @click="gojiesuan" block>我现在就要</van-button></div>
+				<div></div>
+			</div>
+		</van-action-sheet>
 	</div>
 </template>
 
@@ -157,12 +192,20 @@
 	export default {
 		data() {
 			return {
-				sticky:true,
-				pinjianum:'',
+				car:0,
+				titok:1,
+				shuxin:'还么选呢',
+				color_no:false,
+				size_no:false,
+				radio_color: 0,
+				radio_size: 0,
+				show_sku: false,
+				sticky: true,
+				pinjianum: '',
 				status: '已评价',
 				activeName: 'a',
 				carNum: '',
-				show1:false,
+				show1: false,
 				show: false,
 				carList: [],
 				pinjia: [],
@@ -170,10 +213,14 @@
 					step: 1,
 					radio: 1,
 					sale: '',
+					save:'',
 					sale1: '',
 					name: '',
 					image_src: '',
 					src: [],
+					size:[],
+					color:[],
+					delivery:'',
 					id: '',
 					user: '',
 					token: 0,
@@ -187,10 +234,22 @@
 				window.scrollTo(0, 0)
 			})
 			this.objitem.id = this.$route.query.id;
+		
 			this.objitem.name = this.$route.query.name;
 			this.objitem.image_src = this.$route.query.src;
+			this.objitem.color = this.$route.query.color;
+			this.objitem.size = this.$route.query.size;
+			if(this.objitem.color.length==0){
+				this.color_no = true
+			}
+			if(this.objitem.size.length==0){
+				this.size_no = true
+			}
+			this.objitem.delivery = JSON.parse(this.$route.query.delivery);
 			this.objitem.src = this.$route.query.srcc;
 			this.objitem.sale = this.$route.query.sale;
+			this.objitem.save = this.$route.query.save;
+			this.objitem.Nowsave = this.$route.query.Nowsave;
 			this.objitem.detail_src = this.$route.query.detail_src;
 			this.objitem.user = this.$cookies.get('name');
 			this.objitem.sale1 = this.objitem.sale.slice(1);
@@ -200,14 +259,21 @@
 		methods: {
 			//去到结算页面
 			gojiesuan(item) {
+				this.objitem["cheoose_color"]=this.objitem.color[this.radio_color];
+				this.objitem["cheoose_size"]=this.objitem.size[this.radio_size];
 				localStorage.setItem('item', JSON.stringify(this.objitem));
 				this.$router.push({
 					path: "/jiesuan",
 					query: {
 						token: this.token,
-						id: item.id
+						id: item.id,
+						titok:this.titok,
+						car:this.car
 					}
 				});
+			},
+			jiesuan(){
+				this.show_sku = true;
 			},
 			gwche() {
 				this.$router.replace('/cart');
@@ -220,10 +286,10 @@
 				getallpinjia(this.objitem.sale1, this.status).then(res => {
 					this.pinjia = res;
 					this.pinjianum = this.pinjia.length;
-					for(let i = 0;i<this.pinjia.length;i++){
+					for (let i = 0; i < this.pinjia.length; i++) {
 						this.pinjia[i].value = parseInt(res[i].value);
 					}
-					if(this.pinjia.length==0){
+					if (this.pinjia.length == 0) {
 						this.show1 = true;
 					}
 				}, res => {
@@ -242,6 +308,14 @@
 			},
 			//加入购物车
 			joincar() {
+				this.objitem["cheoose_color"]=this.objitem.color[this.radio_color];
+				this.objitem["cheoose_size"]=this.objitem.size[this.radio_size];
+				if(this.objitem.cheoose_color == undefined){
+					this.objitem.cheoose_color = '不需要选择颜色哦'
+				}
+				if(this.objitem.cheoose_size == undefined){
+					this.objitem.cheoose_size = '该商品没有大小哦'
+				}
 				let params = {
 					id: this.objitem.id,
 					image_src: this.objitem.image_src,
@@ -250,11 +324,15 @@
 					step: this.objitem.step,
 					sale1: this.objitem.sale1,
 					radio: this.objitem.radio,
-					user: this.objitem.user
+					user: this.objitem.user,
+					cheoose_color: this.objitem.cheoose_color,
+					cheoose_size: this.objitem.cheoose_size,
 				};
 				joinCar(params).then(response => {
 					this.$toast.success('添加成功');
 					this.carNum = this.carNum + 1;
+					this.shuxin = '颜色：' + this.objitem.cheoose_color + '  ' + '尺寸：' + this.objitem.cheoose_size;
+					this.show_sku = false;
 					this.getdata();
 				}, response => {
 					this.$toast.success('购物车已经有我啦，不可以再添加了哟！');
@@ -280,4 +358,32 @@
 </script>
 
 <style>
+	.content {
+		width: 94%;
+		height: 120px;
+		margin: 0px auto;
+		display: flex;
+	}
+
+	.color {
+		width: 94%;
+		height: 90px;
+		margin: 0px auto;
+	}
+
+	.size {
+		width: 94%;
+		height: 90px;
+		margin: 0px auto;
+	}
+
+	.btn {
+		width: 94%;
+		height: 50px;
+		display: flex;
+		margin: 0px auto;
+	}
+	.disno {
+		display: none;
+	}
 </style>

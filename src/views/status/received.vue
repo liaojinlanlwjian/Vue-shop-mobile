@@ -31,6 +31,7 @@
 					<van-cell-group inset>
 						<van-cell title="配送至" :label="item.address" />
 						<van-cell title="状态" :value="item.goods_status" />
+						<van-cell title="优惠券" :value="item.goods[0].youhuiquan" value-class="valuecss" />
 						<van-cell title="交易状态" icon="passed">
 							<template #right-icon>
 								<van-button round size="mini" color="#f38181" :disabled="but" type="info" @click="jiaoyidone(item)">我已收货
@@ -55,7 +56,7 @@
 								<span style="padding-left: 2px; color: #aa96da;">{{ '账号用户：' + itemm.user}}</span>
 								<span style="padding-left: 5px; color: #f08a5d;">{{ '数量：' + 'x' + itemm.step}}</span>
 								<span
-									style="padding-left: 8px; font-size: 15px; color: #b83b5e;">{{ '总价：' + '￥' + itemm.step*itemm.sale}}</span>
+									style="padding-left: 8px; font-size: 15px; color: #b83b5e;">{{ '总价：' + '￥' + itemm.step*itemm.nowsale}}</span>
 							</div>
 						</div>
 					</div>
@@ -159,5 +160,9 @@
 	.custom-image .van-empty__image {
 		width: 90px;
 		height: 90px;
+	}
+	.valuecss {
+		color: #3f72af;
+		font-size: 9px;
 	}
 </style>

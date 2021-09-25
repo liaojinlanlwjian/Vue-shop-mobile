@@ -51,7 +51,6 @@ function del(url) {
      //axios  method (url,data)
      //axios.put(url, params) //封装请求  统一处理 default host  请求拦截 响应拦截
     axios.delete(url).then(res => {
-		console.log("1");
       resolve(res.data);
     }).catch(err => {
       reject(err.data);

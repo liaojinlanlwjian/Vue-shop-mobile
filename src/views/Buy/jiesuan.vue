@@ -3,19 +3,22 @@
 		<van-nav-bar title="结算" left-arrow @click-left="onClickLeft" />
 		<!-- border: 1px solid red; -->
 		<div v-show="show2">
-				<div style="width: 94%; height: auto; margin: 10px auto 0px auto; border-radius: 18px; ">
-			<van-cell style="border-radius: 18px;" title="收货地址" value="点我选择" size="large" @click="chooseAddress" is-link />
-		</div>
-		<div style=" width: 94%; height: 50px;margin: 10px auto 0px auto; background-color: #FFFFFF; border-radius: 18px;">
-			
-			<div style="width: 100%; height: 25px;   border-bottom: 1px solid #f5f5f6; line-height: 25px;">
-				<span style="padding-left: 12px; font-size: 13px">{{'姓名:'+address.name}}</span>
-				<span style="padding-left: 12px; font-size: 13px">{{'电话:'+address.tel}}</span>
+			<div style="width: 94%; height: auto; margin: 10px auto 0px auto; border-radius: 18px; ">
+				<van-cell style="border-radius: 18px;" title="收货地址" value="点我选择" size="large" @click="chooseAddress"
+					is-link />
 			</div>
-			<div style="width: 100%; height: auto;  ">
-				<span style="padding-left: 12px; font-size: 13px;">{{'地址：' + address.fieldValue + address.detail}}</span>
+			<div
+				style=" width: 94%; height: 50px;margin: 10px auto 0px auto; background-color: #FFFFFF; border-radius: 18px;">
+
+				<div style="width: 100%; height: 25px;   border-bottom: 1px solid #f5f5f6; line-height: 25px;">
+					<span style="padding-left: 12px; font-size: 13px">{{'姓名:'+address.name}}</span>
+					<span style="padding-left: 12px; font-size: 13px">{{'电话:'+address.tel}}</span>
+				</div>
+				<div style="width: 100%; height: auto;  ">
+					<span
+						style="padding-left: 12px; font-size: 13px;">{{'地址：' + address.fieldValue + address.detail}}</span>
+				</div>
 			</div>
-		</div>	
 		</div>
 
 		<div style=" width: 94%; height: auto;margin: 10px auto 0px auto; border-radius: 18px;">
@@ -33,8 +36,10 @@
 						<span style="padding-left: 1px;">{{name}}</span>
 					</div>
 					<div style="font-size: 12px;">
-						<span style="padding-left: 5px;">x {{step}}</span>
-						<span style="padding-left: 145px; font-size: 16px;">￥ {{step*sale}}</span>
+						<span>数量：x {{step}}</span>
+						<span style="padding-left: 8px;">颜色： {{cheoose_color}}</span>
+						<span style="padding-left: 8px;">尺寸： {{cheoose_size}}</span>
+						<span style="padding-left: 12px; font-size: 16px; color: #11d3bc;">￥ {{step*sale}}</span>
 					</div>
 				</div>
 			</div>
@@ -50,23 +55,22 @@
 
 		<div style="width: 100%; height: auto; margin-top: 10px; ">
 			<van-cell-group inset>
-				<van-cell title="积分" value="0积分" icon="info-o" />
 				<van-cell title="商品总价" :value="'￥' + sale*step" />
 				<van-cell title="配送费" value="+￥0" ref="peis" />
-				<van-cell title="商品优惠" value="暂无优惠券" ref="yhui" />
+				<van-cell title="商品优惠" :value="youhui_value" label="点击选择优惠券 >" ref="yhui" is-link @click="goyouhui"/>
 			</van-cell-group>
 		</div>
 
 
-		<div style="width: 100%; height: 50px; margin-top: 25px; border-top: 1px solid #dbdbdb;  ">
-			<span style="padding-left: 20px;"> ￥ {{sale*step}}</span>
+		<div style="width: 100%; height: 50px; margin-top: 32px; border-top: 1px solid #dbdbdb;  ">
+			<span style="padding-left: 20px;"> ￥ {{sale*step - youhui_value }}</span>
 			<span style="padding-left: 180px; padding-top: 10px;">
 				<van-button type="primary" round color="#b83b5e" @click="submit">提交订单</van-button>
 			</span>
 		</div>
 
 
-		
+
 	</div>
 </template>
 
@@ -78,30 +82,40 @@
 	import {
 		getAddress_one
 	} from '../../comoon/api/address.js'
+	import {
+		getCoupons_id
+	} from '../../comoon/api/youhui.js'
 	export default {
 		data() {
 			return {
+				car:'',
+				youhui_value:0,
+				titok:1,
+				titokk:0,
 				address: [],
+				youhuiList: {},
 				idid: '870',
 				msg: '',
 				psd: '',
 				username: '',
-				status_id:'',
+				status_id: '',
 				step: 1,
 				radio: 1,
 				sale: '',
 				name: '',
 				src: '',
+				cheoose_color: '',
+				cheoose_size: '',
 				id: '',
 				user: '',
 				carNum: '',
 				show: false,
 				show1: false,
-				show2:true,
-				token:'',
+				show2: true,
+				token: '',
 				show3: false,
 				carList: [],
-				goodsMsg:'',
+				goodsMsg: '',
 				fieldValue: '',
 				cascaderValue: '',
 				options: [{
@@ -112,63 +126,91 @@
 			};
 		},
 		mounted() {
-			this.goodsMsg = JSON.parse(localStorage.getItem('item'));//JSON.parse() 方法将数据转换为 JavaScript 对象。
-			if(this.goodsMsg.goods==undefined){
+			this.goodsMsg = JSON.parse(localStorage.getItem('item')); //JSON.parse() 方法将数据转换为 JavaScript 对象。
+			if (this.goodsMsg.goods == undefined) {
 				this.id = this.goodsMsg.id;
 				this.name = this.goodsMsg.name;
 				this.src = this.goodsMsg.image_src;
 				this.sale = this.goodsMsg.sale1;
 				this.step = this.goodsMsg.step;
-				this.idid = this.$route.query.idid;
+				this.cheoose_color = this.goodsMsg.cheoose_color;
+				this.cheoose_size = this.goodsMsg.cheoose_size;
+				this.carList = this.$route.query.carList;
+				this.user = this.$cookies.get('name');
+				this.$refs.peis.lastElementChild.style.color = '#b83b5e';
+				this.$refs.yhui.lastElementChild.style.color = '#b83b5e';
+			} else if (this.goodsMsg.goods != undefined) {
+				this.id = this.goodsMsg.goods[0].id;
+				this.name = this.goodsMsg.goods[0].name;
+				this.src = this.goodsMsg.goods[0].image_src;
+				this.sale = this.goodsMsg.goods[0].sale;
+				this.step = this.goodsMsg.goods[0].step;
+				
 				this.carList = this.$route.query.carList;
 				this.user = this.$cookies.get('name');
 				this.$refs.peis.lastElementChild.style.color = '#b83b5e';
 				this.$refs.yhui.lastElementChild.style.color = '#b83b5e';
 			}
-			else if(this.goodsMsg.goods!=undefined){
-			this.id = this.goodsMsg.goods[0].id;
-			this.name = this.goodsMsg.goods[0].name;
-			this.src = this.goodsMsg.goods[0].image_src;
-			this.sale = this.goodsMsg.goods[0].sale;
-			this.step = this.goodsMsg.goods[0].step;
-			this.idid = this.$route.query.idid;
-			this.carList = this.$route.query.carList;
-			this.user = this.$cookies.get('name');
-			this.$refs.peis.lastElementChild.style.color = '#b83b5e';
-			this.$refs.yhui.lastElementChild.style.color = '#b83b5e';
-			}
 			this.status_id = this.$route.query.id;
+			this.titokk = this.$route.query.titok;
 			this.token = this.$route.query.token;
-			if(this.token==1){
+			this.car = this.$route.query.car;
+			this.$cookies.set('car',this.car);
+			if (this.token == 1) {
 				this.show2 = false
 			}
-			
+			if (this.titokk == 1) {
+				this.idid = 870;
+			}
+			else if (this.titokk == undefined){
+				if(this.$route.query.idid != undefined){
+					this.idid = this.$route.query.idid;
+					this.$cookies.set('id_address',this.idid,10000)
+				}
+				else{
+					this.idid = this.$cookies.get('id_address')
+				}
+			}
+			this.id_youhui = this.$route.query.id_youhui;
 			this.getAddress();
+			this.getYouhui();
 		},
 		methods: {
 			getAddress() {
-				if(this.idid == undefined){
-					getAddress_one(870).then(res => {
-					this.address = res[0];
-					// console.log(this.address);
-				}, res => {
-					console.log("error");
-				})
-				}
-				else{
 					getAddress_one(this.idid).then(res => {
 						this.address = res[0];
-						//console.log(this.address);
 					}, res => {
 						console.log("error");
 					})
-				}
 				
+
 			},
 			chooseAddress() {
 				this.$router.push({
 					'path': '/address'
 				});
+			},
+			getYouhui() {
+				if (this.id_youhui == undefined) {
+						this.youhui_value = 0;
+				} else if(this.id_youhui != undefined) {
+					this.idid = this.$route.query.idid;
+					getCoupons_id(this.id_youhui).then(res => {
+						this.youhuiList = res[0];
+						this.youhui_value = this.youhuiList.value;
+					}, res => {
+						console.log("error");
+					})
+				}
+			
+			},
+			goyouhui(){
+				this.$router.push({
+					path: "/youhui",
+					query: {
+						titok: this.titok,
+					}
+				})
 			},
 			sure() {
 				this.msg = this.username + '  ' + '/' + '  ' + this.psd;
@@ -213,7 +255,16 @@
 				this.$toast.success('请尽快支付哦');
 			},
 			submit() {
-				this.$router.push({path: "/checkout", query: {address: this.address,token:this.token,status_id:this.status_id}})
+				this.$router.push({
+					path: "/checkout",
+					query: {
+						address: this.address,
+						token: this.token,
+						status_id: this.status_id,
+						youhiuList:this.youhuiList,
+						car:this.car
+					}
+				})
 			},
 			onClickLeft() {
 				this.$router.go(-1);

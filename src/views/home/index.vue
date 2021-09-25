@@ -44,10 +44,12 @@
 					<div style="width: 80%; height: 170px; margin: 0px auto;">
 						<van-image width="100%" height="10rem" :src="item.image_src" />
 					</div>
-					<div style="overflow: hidden; width: 94%; height: 15px; font-size: 12px;  padding-left: 5px; margin-top: 10px;">
+					<div
+						style="overflow: hidden; width: 94%; height: 15px; font-size: 12px;  padding-left: 5px; margin-top: 10px;">
 						<span>{{item.name}}</span>
 					</div>
-					<div style="color: crimson;font-size: 12px; padding-left: 5px; margin-top: 10px; margin-bottom: 10px;">
+					<div
+						style="color: crimson;font-size: 12px; padding-left: 5px; margin-top: 10px; margin-bottom: 10px;">
 						<span>{{item.sale}}</span>
 					</div>
 				</van-col>
@@ -69,6 +71,7 @@
 			return {
 				iconList: [],
 				goodsList: [],
+				status: true,
 				imgList: [{
 						url: 'https://img.zcool.cn/community/0114605a556e2ca80120121fa27fba.jpg@2o.jpg'
 					},
@@ -93,9 +96,24 @@
 			this.getgoods();
 		},
 		methods: {
-			buyGoods(o){
-				localStorage.setItem('item',JSON.stringify(o));
-				this.$router.push({path: "/detail", query: {id: o.id , name:o.name , src:o.image_src , srcc:o.src ,sale:o.sale,detail_src:o.detail_src}})
+			buyGoods(o) {
+				localStorage.setItem('item', JSON.stringify(o));
+				this.$router.push({
+					path: "/detail",
+					query: {
+						id: o.id,
+						name: o.name,
+						color: o.color,
+						size: o.size,
+						src: o.image_src,
+						srcc: o.src,
+						sale: o.sale,
+						detail_src: o.detail_src,
+						save: o.save,
+						delivery:o.delivery,
+						Nowsave:o.Nowsave
+					}
+				})
 			},
 			geticon() {
 				getIcon().then(response => {
@@ -106,7 +124,8 @@
 			},
 
 			getgoods() {
-				getGoods().then(response => {
+
+				getGoods(this.status).then(response => {
 					this.goodsList = response;
 				}, response => {
 					console.log("error");

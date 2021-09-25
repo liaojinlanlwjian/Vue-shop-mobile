@@ -2,7 +2,7 @@
 	<div>
 		<van-nav-bar title="收银台" left-arrow @click-left="onClickLeft" />
 		<van-cell-group>
-			<van-cell title="付款金额" :value="'¥' + '   ' + goodsMsg.step*goodsMsg.sale1 + '.00'" :label="address.name + '   ' + address.detail" />
+			<van-cell title="付款金额" :value="goodsMsg.step*goodsMsg.sale1-youhiuList.value + '.00'" :label="address.name + '   ' + address.detail" />
 		</van-cell-group>
 		<div style="width: 100%; height: 30px; background-color: #efeff1;"> <span
 				style="font-size: 12px; color: #444f5a; padding-left: 10px; line-height: 30px;">请选择支付方式</span> </div>
@@ -39,7 +39,8 @@
 		patchstatus
 	} from '../../comoon/api/buy.js'
 	import {
-		delCar
+		delCar,
+		getCar
 	} from '../../comoon/api/car.js'
 	import {
 		addSpend_goods
@@ -47,18 +48,29 @@
 	import {
 		getUser
 	} from '../../comoon/api/login.js'
+	import {
+		changeGoods
+	} from '../../comoon/api/index.js'
+	import {
+		changeCoupons_status
+	} from '../../comoon/api/youhui.js'
 	export default {
 		data() {
 			return {
+				car:'',
+				youhiuList:{},
 				address:[],
 				userSpend:[],
 				olduserSpend:[],
 				src:'',
 				id:'',
+				name:'',
+				month:'',
 				show2: false,
 				www: '已支付',
 				hhh: '未支付',
 				status:'未发货',
+				status_coupons:'已使用',
 				goodsMsg:[],
 				status_id:'',
 				zhifu:[
@@ -92,10 +104,21 @@
 		},
 		mounted() {
 			this.id = this.$cookies.get('id');
+			this.name = this.$cookies.get('name');
 			this.goodsMsg = JSON.parse(localStorage.getItem('item'));//JSON.parse() 方法将数据转换为 JavaScript 对象。
 			this.address  = this.$route.query.address;
 			this.token = this.$route.query.token;
 			this.status_id = this.$route.query.status_id;
+			this.car = this.$cookies.get('car')
+			this.youhiuList = this.$route.query.youhiuList
+			if(this.youhiuList.value == undefined){
+				this.youhiuList.value = 0
+				this.youhiuList.type = '无'
+			}
+			else{
+				this.youhiuList.value = this.youhiuList.value
+				this.youhiuList.type = this.youhiuList.type
+			}
 			this.getuser();
 		},
 		methods: {
@@ -130,29 +153,34 @@
 				    if (strDate >= 0 && strDate <= 9) {
 				        strDate = "0" + strDate;
 				    }
-				    this.currentDate = date.getFullYear() + "-" + month + "-" + strDate
-				            + " " + date.getHours() + ":" + date.getMinutes();
+				    this.currentDate = date.getFullYear() + "-" + month + "-" + strDate;
+					this.month = month;
 			},
 			getuser(){
 				getUser(this.id).then(res=>{
-					console.log(res[0]);
 					if(res[0].spend==null){
 						this.getTime();
 						this.userSpend=[{
+							month:this.month,
 							time:this.currentDate,
 							type:this.goodsMsg.name,
 							spend:this.goodsMsg.sale1,
-							user:this.address.name
+							user:this.address.name,
+							nowsale:this.goodsMsg.sale1 - this.youhiuList.value,
+							youhuiquan:'类型为:' + this.youhiuList.type+ '    ' + '价值为' + this.youhiuList.value + '的优惠券'
 						}];
 					}
 					else if(res[0].spend!=null){
 					this.userSpend = res[0].spend;
 					this.getTime();
 					this.olduserSpend={
+						month:this.month,
 						time:this.currentDate,
 						type:this.goodsMsg.name,
 						spend:this.goodsMsg.sale1,
-						user:this.address.name
+						user:this.address.name,
+						nowsale:this.goodsMsg.sale1 - this.youhiuList.value,
+						youhuiquan:'类型为:' + this.youhiuList.type+ '    ' + '价值为' + this.youhiuList.value + '的优惠券'
 					};
 					this.userSpend.push(this.olduserSpend)
 					}
@@ -168,6 +196,7 @@
 					let params = {	
 					id:Math.round(Math.random() * 10000),
 					time:this.currentDate,
+					month:this.month,
 					address_id:that.address.id,
 					status:that.www,
 					goods_status:that.status,
@@ -182,23 +211,42 @@
 						user:that.goodsMsg.user,
 						sale:that.goodsMsg.sale1,
 						step:that.goodsMsg.step,
+						color:that.goodsMsg.cheoose_color,
+						size:that.goodsMsg.cheoose_size,
+						nowsale:that.goodsMsg.sale1 - that.youhiuList.value,
+						youhuiquan:'类型为:' + that.youhiuList.type+ '    '+ ';' + '价值为' + that.youhiuList.value + '的优惠券'
 					}]
 				};
 				addBuy(params).then(res=>{
 					that.$toast.success('成功');
 					that.$cookies.set('gomaizhe',that.address.name);
-					delCar(that.goodsMsg.id);
-					setTimeout(function(){
-						that.$router.push('/pay');
-					},1200 )
+
+				// delCar(that.goodsMsg.id);
+
 				},res=>{
 					that.$toast.success('失败');
-				})
+				});
+				
+				let paramssss = {
+					status:this.status_coupons
+				};
+				if(this.youhiuList.id == undefined){
+					that.$toast("暂无优惠券使用");
+				}
+				else if(this.youhiuList.id != undefined){
+					changeCoupons_status(this.youhiuList.id,paramssss);
+				}
 				
 				let paramss ={
 					spend:this.userSpend
 				};
-				addSpend_goods(this.id,paramss)
+				addSpend_goods(this.id,paramss);
+				
+				let paramsss = {
+					Nowsave:this.goodsMsg.Nowsave -1
+				};
+				
+				changeGoods(this.goodsMsg.id,paramsss);
 				}
 				else if(this.token == 1){
 					let params = {
@@ -213,12 +261,21 @@
 						that.$toast.success('失败');
 					})
 				}
-				
+				setTimeout(function(){
+					that.$router.push({
+						path: "/pay",
+						query: {
+							id: that.goodsMsg.id,
+						}
+					})
+				},1200 )
 			},
 			cancel() {
 				let that = this;
 				let params = {	
 					id:Math.round(Math.random() * 10000),
+					time:this.currentDate,
+					month:this.month,
 					address_id:that.address.id,
 					status:that.hhh,
 					goods_status:that.status,
